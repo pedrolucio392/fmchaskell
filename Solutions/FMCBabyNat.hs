@@ -79,7 +79,7 @@ _ ^ O = S O
 n ^ (S m) = n ^ m * n
 
 
-infixl 8 ^
+infixr 8 ^
 
 (<=) :: Nat -> Nat -> Nat
 O <= _ = S O
@@ -154,3 +154,26 @@ fib :: Nat -> Nat
 fib O = O
 fib (S O) = S O
 fib (S (S n)) = fib (S n) + fib n
+
+
+-- x4.12
+
+-- q :: Nat -> Nat
+-- q O             = O
+-- q (S O)         = O
+-- q (S (S O))     = O
+-- q (S (S (S n))) = S (q n)
+
+q :: Nat -> Nat
+q (S (S (S n))) = S (q n)
+q _ = O
+
+-- r :: Nat → Nat
+-- r O              = O
+-- r (S O)          = S O
+-- r (S (S O))      = S (S O)
+-- r (S (S (S n))) = r n
+
+r :: Nat -> Nat
+r (S (S (S n))) = r n
+r n = n
