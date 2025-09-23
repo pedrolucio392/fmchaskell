@@ -1,7 +1,7 @@
 module FMCBabyNat where
 
 -- Do not alter this import!
-import Prelude ( Show(..) , Eq(..) , undefined )
+import Prelude ( Show(..) , Eq(..) , undefined , otherwise)
 
 -- Define evenerything that is undefined,
 -- without using standard Haskell functions.
@@ -79,36 +79,68 @@ n ^ (S m) = n ^ m * n
 
 infixl 8 ^
 
+(<=) :: Nat -> Nat -> Nat
+O <= _ = S O
+S _ <= O = O
+(S n) <= (S m) = n <= m
+
+(<) :: Nat -> Nat -> Nat
+O < S _ = S O
+_ < O = O
+(S n) < (S m) = n < m 
+
 -- quotient
 (/) :: Nat -> Nat -> Nat
-(/) = undefined
+_ / O = undefined
+O / _ = O
+n / (S O) = n
+n / m     = if n < m == S O
+            then O
+            else S O + ((n -* m) / m)
 
 -- remainder
 (%) :: Nat -> Nat -> Nat
-(%) = undefined
+_ % O = undefined
+O % _ = O
+n % (S O) = O
+n % m = if n < m == S O
+        then O
+        else S O + ((n -* m) % m)
 
 -- divides
 -- just for a change, we start by defining the "symbolic" operator
 -- and then define `devides` as a synonym to it
 -- again, outputs: O means False, S O means True
 (|||) :: Nat -> Nat -> Nat
-(|||) = undefined
+_ ||| O = S O
+O ||| (S _) = O
+n ||| m = if isZero(m % n) == S O
+          then S O
+          else O
+
 
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the actual minus operator we know from the integers!)
 absDiff :: Nat -> Nat -> Nat
-absDiff = undefined
+absDiff n m = (n -* m) + (m -* n)
 
 (|-|) :: Nat -> Nat -> Nat
 (|-|) = absDiff
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial O = S O
+factorial (S n) = factorial n * (S n)
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg _ = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
-lo = undefined
+lo O _ = undefined
+lo _ O = undefined
+lo (S O) _ = undefined
+lo n m = if m < n == S O
+         then O
+         else S O + (lo n (m / n))
