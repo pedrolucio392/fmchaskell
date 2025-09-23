@@ -44,11 +44,11 @@ pred (S n) = n
 
 -- Output: O means False, S O means True
 even :: Nat -> Nat
-even O = O
+even O = S O
 even (S n) = odd n 
 
 odd :: Nat -> Nat
-odd O = S O
+odd O = O
 odd (S n) = even n
 
 -- This is called the dotminus or monus operator
@@ -129,7 +129,7 @@ absDiff n m = (n -* m) + (m -* n)
 
 factorial :: Nat -> Nat
 factorial O = S O
-factorial (S n) = factorial n * (S n)
+factorial (S n) = factorial n * S n
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
@@ -143,4 +143,16 @@ lo _ O = undefined
 lo (S O) _ = undefined
 lo n m = if m < n == S O
          then O
-         else S O + (lo n (m / n))
+         else S O + lo n (m / n)
+
+
+-- Some definitions seen in FMCBook 
+
+double :: Nat -> Nat
+double O = O
+double (S n) = S (S (double n))
+
+fib :: Nat -> Nat
+fib O = O
+fib (S O) = S O
+fib (S (S n)) = fib (S n) + fib n
