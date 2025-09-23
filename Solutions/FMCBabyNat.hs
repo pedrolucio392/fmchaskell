@@ -63,6 +63,8 @@ n -* O = n
 O -* _ = O
 (S m) -* (S n) = m -* n
 
+infixl 6 -*
+
 -- multiplication
 (*) :: Nat -> Nat -> Nat
 _ * O = O
@@ -92,21 +94,18 @@ _ < O = O
 -- quotient
 (/) :: Nat -> Nat -> Nat
 _ / O = undefined
-O / _ = O
-n / (S O) = n
-n / m     = if n < m == S O
-            then O
-            else S O + ((n -* m) / m)
+n / m     = case m <= n of
+            O -> O
+            S O -> S ((n -* m) / m)
 
+
+infixl 7 /
 -- remainder
 (%) :: Nat -> Nat -> Nat
 _ % O = undefined
-O % _ = O
-n % (S O) = O
-n % m = if n < m == S O
-        then O
-        else S O + ((n -* m) % m)
+n % m = n -* (m * (n/m))
 
+infixl 7 %
 -- divides
 -- just for a change, we start by defining the "symbolic" operator
 -- and then define `devides` as a synonym to it
@@ -114,9 +113,9 @@ n % m = if n < m == S O
 (|||) :: Nat -> Nat -> Nat
 _ ||| O = S O
 O ||| (S _) = O
-n ||| m = if isZero(m % n) == S O
-          then S O
-          else O
+n ||| m = case isZero(m % n) of
+          O -> O
+          S O -> S O
 
 
 -- x `absDiff` y = |x - y|
@@ -141,10 +140,9 @@ lo :: Nat -> Nat -> Nat
 lo O _ = undefined
 lo _ O = undefined
 lo (S O) _ = undefined
-lo n m = if m < n == S O
-         then O
-         else S O + lo n (m / n)
-
+lo n m = case m < n of
+         S O -> O
+         O -> S (lo n (m / n))
 
 -- Some definitions seen in FMCBook 
 
