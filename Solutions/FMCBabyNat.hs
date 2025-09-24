@@ -1,7 +1,7 @@
 module FMCBabyNat where
 
 -- Do not alter this import!
-import Prelude ( Show(..) , Eq(..) , undefined , otherwise)
+import Prelude (Eq (..), Show (..), otherwise, undefined)
 
 -- Define evenerything that is undefined,
 -- without using standard Haskell functions.
@@ -13,29 +13,29 @@ data Nat = O | S Nat
 
 -- some sugar
 zero, one, two, three, four, five, six, seven, eight :: Nat
-zero  = O
-one   = S zero
-two   = S one
+zero = O
+one = S zero
+two = S one
 three = S two
-four  = S three
-five  = S four
-six   = S five
+four = S three
+five = S four
+six = S five
 seven = S six
 eight = S seven
 
 -- addition
 (+) :: Nat -> Nat -> Nat
-n + O   = n
+n + O = n
 n + S m = S (n + m)
 
- -- syntactic associativity: L
- -- syntactic precedence: 6
+-- syntactic associativity: L
+-- syntactic precedence: 6
 infixl 6 +
 
 -- Output: O means False, S O means True
 isZero :: Nat -> Nat
 isZero O = S O
-isZero (S _)  = O
+isZero (S _) = O
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
@@ -45,7 +45,7 @@ pred (S n) = n
 -- Output: O means False, S O means True
 even :: Nat -> Nat
 even O = S O
-even (S n) = odd n 
+even (S n) = odd n
 
 odd :: Nat -> Nat
 odd O = O
@@ -70,14 +70,12 @@ infixl 6 -*
 _ * O = O
 n * (S m) = n * m + n
 
-
 infixl 7 *
 
 -- exponentiation
 (^) :: Nat -> Nat -> Nat
 _ ^ O = S O
 n ^ (S m) = n ^ m * n
-
 
 infixr 8 ^
 
@@ -89,23 +87,25 @@ S _ <= O = O
 (<) :: Nat -> Nat -> Nat
 O < S _ = S O
 _ < O = O
-(S n) < (S m) = n < m 
+(S n) < (S m) = n < m
 
 -- quotient
 (/) :: Nat -> Nat -> Nat
 _ / O = undefined
-n / m     = case m <= n of
-            O -> O
-            S O -> S ((n -* m) / m)
-
+n / m = 
+  case m <= n of
+    O -> O
+    S O -> S ((n -* m) / m)
 
 infixl 7 /
+
 -- remainder
 (%) :: Nat -> Nat -> Nat
 _ % O = undefined
-n % m = n -* (m * (n/m))
+n % m = n -* (m * (n / m))
 
 infixl 7 %
+
 -- divides
 -- just for a change, we start by defining the "symbolic" operator
 -- and then define `devides` as a synonym to it
@@ -113,10 +113,10 @@ infixl 7 %
 (|||) :: Nat -> Nat -> Nat
 _ ||| O = S O
 O ||| (S _) = O
-n ||| m = case isZero(m % n) of
-          O -> O
-          S O -> S O
-
+n ||| m = 
+  case isZero (m % n) of
+    O -> O
+    S O -> S O
 
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the actual minus operator we know from the integers!)
@@ -140,11 +140,12 @@ lo :: Nat -> Nat -> Nat
 lo O _ = undefined
 lo _ O = undefined
 lo (S O) _ = undefined
-lo n m = case m < n of
-         S O -> O
-         O -> S (lo n (m / n))
+lo n m =
+  case m < n of
+    S O -> O
+    O -> S (lo n (m / n))
 
--- Some definitions seen in FMCBook 
+-- Some definitions seen in FMCBook
 
 double :: Nat -> Nat
 double O = O
@@ -154,7 +155,6 @@ fib :: Nat -> Nat
 fib O = O
 fib (S O) = S O
 fib (S (S n)) = fib (S n) + fib n
-
 
 -- x4.12
 
