@@ -79,23 +79,13 @@ n ^ (S m) = n ^ m * n
 
 infixr 8 ^
 
-(<=) :: Nat -> Nat -> Nat
-O <= _ = S O
-S _ <= O = O
-(S n) <= (S m) = n <= m
-
-(<) :: Nat -> Nat -> Nat
-O < S _ = S O
-_ < O = O
-(S n) < (S m) = n < m
-
 -- quotient
 (/) :: Nat -> Nat -> Nat
 _ / O = undefined
-n / m = 
-  case m <= n of
+n / S m = 
+  case n -* m of
     O -> O
-    S O -> S ((n -* m) / m)
+    _ -> S ((n -* S m) / S m)
 
 infixl 7 /
 
@@ -141,9 +131,9 @@ lo O _ = undefined
 lo _ O = undefined
 lo (S O) _ = undefined
 lo n m =
-  case m < n of
-    S O -> O
-    O -> S (lo n (m / n))
+  case m / n of
+    O -> O
+    _ -> S (lo n (m / n))
 
 -- Some definitions seen in FMCBook
 
