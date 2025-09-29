@@ -3,6 +3,8 @@
 module ExNat where
 
 -- Do not alter this import!
+
+import Distribution.Simple.Utils (xargs)
 import Prelude
   ( Bool (..),
     Eq (..),
@@ -10,6 +12,8 @@ import Prelude
     Num (..),
     Ord (..),
     Show (..),
+    fst,
+    snd,
     error,
     not,
     otherwise,
@@ -20,7 +24,6 @@ import Prelude
     (.),
     (||),
   )
-import Distribution.Simple.Utils (xargs)
 
 -- Define evenerything that is undefined,
 -- without using standard Haskell functions.
@@ -148,19 +151,15 @@ n <^> (S m) = n <^> m <*> n
 infixl 8 <^>
 
 -- quotient
+
 (</>) :: Nat -> Nat -> Nat
-_ </> O = undefined
-n </> S m =
-  case n <-> m of
-    O -> O
-    _ -> S ((n <-> S m) </> S m)
+n </> m = fst (eucdiv (n, m))
 
 infixl 7 </>
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-_ <%> O = undefined
-n <%> m = n <-> (m <*> (n </> m))
+n <%> m = snd (eucdiv (n, m))
 
 infixl 7 <%>
 
@@ -173,11 +172,6 @@ eucdiv (n, m) =
     else
       let (q, r) = eucdiv (n <-> m, m)
        in (S q, r)
-
--- quot :: (Nat, Nat) -> c
--- quot = fst . eucdiv
--- rem :: (Nat, Nat) -> c
--- rem  = snd . eucdiv
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
@@ -226,7 +220,7 @@ toNat :: (Integral a) => a -> Nat
 toNat x
   | x < 0 = undefined
   | x == 0 = O
-  | otherwise = S(toNat (x - 1)) 
+  | otherwise = S (toNat (x - 1))
 
 fromNat :: (Integral a) => Nat -> a
 fromNat O = 0
@@ -242,4 +236,4 @@ instance Num Nat where
   fromInteger x
     | x < 0 = undefined
     | x == 0 = O
-    | otherwise = S(fromInteger (x - 1))
+    | otherwise = S (fromInteger (x - 1))
