@@ -247,7 +247,7 @@ repeat x = x : repeat x
 
 replicate :: (Integral i) => i -> a -> [a]
 replicate i _ | i <= 0 = []
-replicate i x = x : replicate (i - 1) x 
+replicate i x = x : replicate (i - 1) x
 
 isPrefixOf :: (Eq a) => [a] -> [a] -> Bool
 isPrefixOf [] _ = True
@@ -262,11 +262,24 @@ isInfixOf xs (y : ys) = isPrefixOf xs ys || isInfixOf xs ys
 isSuffixOf :: (Eq a) => [a] -> [a] -> Bool
 isSuffixOf xs ys = isPrefixOf (reverse xs) (reverse ys)
 
--- zip
--- zipWith
+zip :: [a] -> [b] -> [(a, b)]
+zip [] _ = []
+zip _ [] = []
+zip (x : xs) (y : ys) = (x, y) : zip xs ys
 
--- intercalate
--- nub
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWith _ [] _ = []
+zipWith _ _ [] = []
+zipWith f (x : xs) (y : ys) = f x y : zipWith f xs ys
+
+intercalate :: [a] -> [[a]] -> [a]
+intercalate _ [] = []
+intercalate _ [x] = x
+intercalate y (x : xs) = x ++ y ++ intercalate y xs
+
+nub :: (Eq a) => [a] -> [a]
+nub [] = []
+nub (x : xs) = x : nub (filter (/= x) xs)
 
 -- splitAt
 -- what is the problem with the following?:
