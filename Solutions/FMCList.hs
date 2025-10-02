@@ -10,6 +10,7 @@
 
 module FMCList where
 
+import Data.Binary.Get (Decoder (Fail))
 import Data.Char qualified as C
 import Data.List qualified as L
 import Data.Traversable (for)
@@ -39,7 +40,7 @@ import Prelude
     (||),
   )
 import Prelude qualified as P
-import Data.Binary.Get (Decoder(Fail))
+import Text.XHtml (underline)
 
 {- import qualified ... as ... ?
 
@@ -251,7 +252,7 @@ replicate i x = x : replicate (i - 1) x
 
 isPrefixOf :: (Eq a) => [a] -> [a] -> Bool
 isPrefixOf [] _ = True
-isPrefixOf _ []  = False
+isPrefixOf _ [] = False
 isPrefixOf (x : xs) (y : ys) = x == y && isPrefixOf xs ys
 
 isInfixOf :: (Eq a) => [a] -> [a] -> Bool
@@ -281,22 +282,49 @@ nub :: (Eq a) => [a] -> [a]
 nub [] = []
 nub (x : xs) = x : nub (filter (/= x) xs)
 
--- splitAt
+splitAt :: (Integral i) => i -> [a] -> ([a], [a])
+splitAt i xs = (take i xs, drop i xs)
+
 -- what is the problem with the following?:
 -- splitAt n xs  =  (take n xs, drop n xs)
 
--- break
+break :: (a -> Bool) -> [a] -> ([a], [a])
+break _ [] = ([], [])
+break p (x : xs) =
+  if p x
+    then ([], x : xs)
+    else
+      let
+          (first, second) = break p xs
+       in
+          (x : first, second)
 
--- lines
--- words
--- unlines
--- unwords
+lines :: String -> [String]
+lines "" = []
+lines (c : cs) = undefined
 
--- transpose
+words :: String -> [String]
+words "" = []
+words (c : cs) = undefined
+
+unlines :: String -> [String]
+unlines "" = []
+unlines (c : cs) = undefined
+
+unwords :: String -> [String]
+unwords "" = []
+unwords (c : cs) = undefined
+
+transpose :: [[a]] -> [[a]]
+transpose []       = []
+transpose ([]:_)   = []
+transpose xss      = map head xss : transpose (map tail xss)
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
 palindrome :: String -> Bool
-palindrome = undefined
+palindrome s =
+  let sFormat = map C.toLower (filter C.isAlpha s)
+   in sFormat == reverse sFormat
 
 {-
 
