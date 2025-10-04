@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs #-}
 
-module Solutions.FMCNat where
+module FMCNat where
 
 -- Do not alter this import!
 

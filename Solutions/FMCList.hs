@@ -7,13 +7,17 @@
 {-# HLINT ignore "Use elem" #-}
 {-# HLINT ignore "Eta reduce" #-}
 {-# HLINT ignore "Use infix" #-}
+{-# HLINT ignore "Use isAsciiLower" #-}
+{-# HLINT ignore "Use isAsciiUpper" #-}
 
 module FMCList where
 
 import Data.Binary.Get (Decoder (Fail))
 import Data.Char qualified as C
+import Data.List (scanl')
 import Data.List qualified as L
 import Data.Traversable (for)
+import Text.XHtml (underline)
 import Prelude
   ( Bool (..),
     Char,
@@ -40,7 +44,8 @@ import Prelude
     (||),
   )
 import Prelude qualified as P
-import Text.XHtml (underline)
+
+-- import FMCNat
 
 {- import qualified ... as ... ?
 
@@ -170,7 +175,7 @@ dropWhile _ [] = []
 dropWhile p (x : xs) =
   if p x
     then dropWhile p xs
-    else xs
+    else x : xs
 
 tails :: [a] -> [[a]]
 tails [] = [[]]
@@ -294,36 +299,62 @@ break p (x : xs) =
   if p x
     then ([], x : xs)
     else
-      let
-          (first, second) = break p xs
-       in
-          (x : first, second)
+      let (first, second) = break p xs
+       in (x : first, second)
 
 lines :: String -> [String]
 lines "" = []
-lines (c : cs) = undefined
+lines s =
+  let (line, rest) = break (== '\n') s
+   in line : case rest of
+        "" -> []
+        (_ : s') -> lines s'
+
+myIsSpace :: Char -> Bool
+myIsSpace ' ' = True
+myIsSpace '\n' = True
+myIsSpace '\t' = True
+myIsSpace '\r' = True
+myIsSpace _ = False
 
 words :: String -> [String]
 words "" = []
-words (c : cs) = undefined
+words s =
+  let s' = dropWhile myIsSpace s
+   in case s' of
+        "" -> []
+        _ ->
+          let (word, rest) = break myIsSpace s'
+           in word : words rest
 
-unlines :: String -> [String]
-unlines "" = []
-unlines (c : cs) = undefined
+unlines :: [String] -> String
+unlines [] = ""
+unlines s = intercalate ['\n'] s
 
-unwords :: String -> [String]
-unwords "" = []
-unwords (c : cs) = undefined
+unwords :: [String] -> String
+unwords [] = ""
+unwords [s] = s
+unwords (s : ss) = s ++ " " ++ unwords ss
 
 transpose :: [[a]] -> [[a]]
-transpose []       = []
-transpose ([]:_)   = []
-transpose xss      = map head xss : transpose (map tail xss)
+transpose [] = []
+transpose ([] : _) = []
+transpose xss = map head xss : transpose (map tail xss)
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
+
+myIsAlpha :: Char -> Bool
+myIsAlpha c = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+
+myToLower :: Char -> Char
+myToLower c =
+  if c >= 'A' && c <= 'Z'
+    then toEnum (fromEnum c + 32)
+    else c
+
 palindrome :: String -> Bool
 palindrome s =
-  let sFormat = map C.toLower (filter C.isAlpha s)
+  let sFormat = map myToLower (filter myIsAlpha s)
    in sFormat == reverse sFormat
 
 {-
