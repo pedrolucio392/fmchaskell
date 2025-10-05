@@ -368,3 +368,22 @@ Examples of palindromes:
 "Doc, note I dissent.  A fast never prevents a fatness.  I diet on cod."
 
 -}
+
+-- Extra
+
+foldr :: (a -> b -> b) -> b -> [a] -> b
+foldr _ i [] = i
+foldr f i (x : xs) = f x (foldr f i xs)
+
+foldl :: (b -> a -> b) -> b -> [a] -> b
+foldl _ i [] = i
+foldl f i (x : xs) = foldl f (f i x) xs -- foldl (+) 0 [1, 2, 3] = foldl (+) ((+) 0 1) [2, 3] = foldl (+) ((+) ((+) 0 1)) 2) [3] ...
+
+-- Redefinindo map e filter usando o fold
+
+map' :: (a -> b) -> [a] -> [b]
+map' f xs = foldr (\x acc -> f x : acc) [] xs
+
+
+filter' :: (a -> Bool) -> [a] -> [a]
+filter' f xs = foldl f [] xs
