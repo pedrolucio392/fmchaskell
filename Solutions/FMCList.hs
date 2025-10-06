@@ -386,4 +386,4 @@ map' f xs = foldr (\x acc -> f x : acc) [] xs
 
 
 filter' :: (a -> Bool) -> [a] -> [a]
-filter' f xs = foldl f [] xs
+filter' f xs = foldr (\x acc -> if f x then x : acc else acc) [] xs

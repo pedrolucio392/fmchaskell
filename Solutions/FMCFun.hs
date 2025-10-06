@@ -32,6 +32,7 @@ flip f x y = f y x
 (.) :: (b -> c) -> (a -> b) -> (a -> c)
 (f . g) x = f (g x)
 
+
 (.>) = flip (.)
 
 -- ($) takes a function and a suitable argument and applies the function to the argument
