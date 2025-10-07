@@ -9,6 +9,7 @@
 {-# HLINT ignore "Use infix" #-}
 {-# HLINT ignore "Use isAsciiLower" #-}
 {-# HLINT ignore "Use isAsciiUpper" #-}
+{-# HLINT ignore "Use if" #-}
 
 module FMCList where
 
@@ -17,6 +18,7 @@ import Data.Char qualified as C
 import Data.List (scanl')
 import Data.List qualified as L
 import Data.Traversable (for)
+import Solutions.FMCNat (Nat (..), zero, one, two, three, four, five)
 import Text.XHtml (underline)
 import Prelude
   ( Bool (..),
@@ -384,6 +386,25 @@ foldl f i (x : xs) = foldl f (f i x) xs -- foldl (+) 0 [1, 2, 3] = foldl (+) ((+
 map' :: (a -> b) -> [a] -> [b]
 map' f xs = foldr (\x acc -> f x : acc) [] xs
 
-
 filter' :: (a -> Bool) -> [a] -> [a]
 filter' f xs = foldr (\x acc -> if f x then x : acc else acc) [] xs
+
+-- get :: (Eq a) => Nat -> [a] -> a
+-- get _ [] = undefined
+-- get O (x : xs) = x
+-- get (S n) (x : xs) = get n xs
+
+get :: (Eq a) => (Integral i) => i -> [a] -> a
+get _ [] = undefined
+get 0 (x : xs) = x
+get n (x : xs) | n <= 0 = get (n - 1) xs
+
+insert :: Ord a => a -> [a] -> [a]
+insert x [] = [x]
+insert x (y : ys) = case x <= y of
+  True -> x : (y : ys)
+  False -> y : insert x ys
+
+sort :: Ord a => [a] -> [a]
+sort [] = []
+sort (x : xs) = insert x (sort xs)

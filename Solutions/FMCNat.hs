@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs #-}
 
-module FMCNat where
+module Solutions.FMCNat where
 
 -- Do not alter this import!
 
@@ -60,7 +60,7 @@ instance Ord Nat where
 
   min O _ = O
   min _ O = O
-  min (S n) (S m) = S (min n m)
+  min (S n) (S m) = S (min n m) -- min 2 3 =  min SSO SSSO = S (min SO SSO) = SS (min O SO) = SSO
 
   max O n = n
   max n O = n

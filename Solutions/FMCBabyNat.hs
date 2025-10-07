@@ -1,4 +1,4 @@
-module FMCBabyNat where
+module Solutions.FMCBabyNat where
 
 -- Do not alter this import!
 import Prelude (Eq (..), Show (..), otherwise, undefined)
